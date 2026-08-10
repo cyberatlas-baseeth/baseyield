@@ -99,7 +99,7 @@ export default function ChatInterface() {
 
   return (
     <div className="flex flex-col h-full">
-      <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 scrollbar-thin scrollbar-thumb-[#1a1f3c] scrollbar-track-transparent">
+      <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 scrollbar-thin scrollbar-thumb-[#e2e5f1] scrollbar-track-transparent">
         <div className="max-w-3xl mx-auto flex flex-col gap-6">
           {messages.length === 0 ? (
             <div className="h-full min-h-[60vh] flex items-center">

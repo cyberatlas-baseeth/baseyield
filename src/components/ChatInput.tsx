@@ -41,17 +41,16 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
   };
 
   return (
-    <div className="p-4 bg-gradient-to-t from-[#0a0e27] via-[#0a0e27]/90 to-transparent">
-      <div className="max-w-3xl mx-auto relative group">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0052FF]/50 to-[#3b82f6]/50 rounded-2xl blur opacity-30 group-focus-within:opacity-100 transition duration-500"></div>
-        <div className={`relative flex items-end gap-2 bg-[#1a1f3c]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-2 ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
+    <div className="p-4 bg-gradient-to-t from-[#f8f9ff] via-[#f8f9ff]/90 to-transparent">
+      <div className="max-w-3xl mx-auto relative">
+        <div className={`relative flex items-end gap-2 bg-white border border-[#e2e5f1] rounded-2xl p-2 shadow-sm input-focus transition-all duration-200 ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
           <textarea
             ref={textareaRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask about Base yields..."
-            className="flex-1 max-h-[120px] min-h-[44px] bg-transparent text-white placeholder-gray-400 resize-none outline-none py-2.5 px-3 rounded-xl scrollbar-thin scrollbar-thumb-white/10"
+            className="flex-1 max-h-[120px] min-h-[44px] bg-transparent text-[#0a0e27] placeholder-[#9ca3af] resize-none outline-none py-2.5 px-3 rounded-xl scrollbar-thin"
             rows={1}
             disabled={isLoading}
           />
