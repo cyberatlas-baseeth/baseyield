@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "YieldPulse — Best Yield Opportunities on Base",
+  title: "Baseyield-ai — Best Yield Opportunities on Base",
   description:
     "AI-powered yield discovery agent for the Base blockchain. Find the best DeFi yields, compare protocols, and discover high-APY opportunities on Base.",
   keywords: [
@@ -24,15 +24,15 @@ export const metadata: Metadata = {
     "staking",
   ],
   openGraph: {
-    title: "YieldPulse — Best Yield Opportunities on Base",
+    title: "Baseyield-ai — Best Yield Opportunities on Base",
     description:
       "AI-powered yield discovery agent for the Base blockchain. Ask any question about Base yields.",
     type: "website",
-    siteName: "YieldPulse",
+    siteName: "Baseyield-ai",
   },
   twitter: {
     card: "summary_large_image",
-    title: "YieldPulse — Best Yield Opportunities on Base",
+    title: "Baseyield-ai — Best Yield Opportunities on Base",
     description:
       "AI-powered yield discovery agent for the Base blockchain.",
   },
