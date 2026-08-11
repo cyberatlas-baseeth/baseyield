@@ -21,7 +21,7 @@ function getGroqClient(): Groq {
 /** Models available on Groq free tier */
 export const GROQ_MODELS = {
   fast: "llama-3.1-8b-instant" as const,
-  gpt_oss: "openai/gpt-oss-20b" as const,
+  gpt_oss: "llama-3.3-70b-versatile" as const,
 };
 
 export interface GroqMessage {
