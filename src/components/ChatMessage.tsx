@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatMessageProps {
   role: 'user' | 'assistant';
@@ -27,7 +28,7 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
             <div className="whitespace-pre-wrap text-[15px]">{content}</div>
           ) : (
             <div className="markdown-content max-w-none text-[15px]">
-              <ReactMarkdown>{content}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
             </div>
           )}
         </div>
