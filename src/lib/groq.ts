@@ -21,7 +21,7 @@ function getGroqClient(): Groq {
 /** Models available on Groq free tier */
 export const GROQ_MODELS = {
   fast: "llama-3.1-8b-instant" as const,
-  quality: "llama-3.3-70b-versatile" as const,
+  gpt_oss: "gpt-oss-20b" as const,
 };
 
 export interface GroqMessage {
@@ -35,7 +35,7 @@ export interface GroqMessage {
  */
 export async function streamChatCompletion(
   messages: GroqMessage[],
-  model: string = GROQ_MODELS.fast
+  model: string = GROQ_MODELS.gpt_oss
 ): Promise<AsyncIterable<string>> {
   const client = getGroqClient();
 
@@ -64,7 +64,7 @@ export async function streamChatCompletion(
  */
 export async function chatCompletion(
   messages: GroqMessage[],
-  model: string = GROQ_MODELS.fast
+  model: string = GROQ_MODELS.gpt_oss
 ): Promise<string> {
   const client = getGroqClient();
 
