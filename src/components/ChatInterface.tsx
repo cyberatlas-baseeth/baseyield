@@ -73,7 +73,16 @@ export default function ChatInterface() {
             
             try {
               const parsed = JSON.parse(data);
-              if (parsed.content) {
+              if (parsed.error) {
+                assistantContent += (assistantContent ? '\n\n' : '') + `⚠️ **Error**: ${parsed.error}`;
+                setMessages(prev => 
+                  prev.map(msg => 
+                    msg.id === assistantMessageId 
+                      ? { ...msg, content: assistantContent }
+                      : msg
+                  )
+                );
+              } else if (parsed.content) {
                 assistantContent += parsed.content;
                 setMessages(prev => 
                   prev.map(msg => 
@@ -88,6 +97,16 @@ export default function ChatInterface() {
             }
           }
         }
+      }
+      
+      if (!assistantContent.trim()) {
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === assistantMessageId 
+              ? { ...msg, content: '⚠️ The response timed out or the model returned an empty response. Please try asking again.' }
+              : msg
+          )
+        );
       }
     } catch (error) {
       setIsLoading(false);

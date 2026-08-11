@@ -8,8 +8,7 @@ import { streamChatCompletion, GroqMessage } from "@/lib/groq";
 import { buildSystemPrompt } from "@/lib/prompts";
 import { ChatRequest } from "@/lib/types";
 
-export const runtime = "nodejs";
-export const maxDuration = 30; // Vercel free tier: 10s default, up to 60s
+export const runtime = "edge";
 
 export async function POST(request: NextRequest) {
   try {
