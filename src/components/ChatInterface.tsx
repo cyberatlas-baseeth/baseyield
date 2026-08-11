@@ -49,6 +49,7 @@ export default function ChatInterface() {
 
       const decoder = new TextDecoder();
       let assistantContent = '';
+      let buffer = '';
       
       const assistantMessageId = (Date.now() + 1).toString();
       setMessages(prev => [...prev, { id: assistantMessageId, role: 'assistant', content: '' }]);
@@ -58,10 +59,14 @@ export default function ChatInterface() {
         const { done, value } = await reader.read();
         if (done) break;
         
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        
+        // The last element is either an incomplete line or an empty string (if it ended with \n)
+        buffer = lines.pop() || '';
         
         for (const line of lines) {
+          if (!line.trim()) continue;
           if (line.startsWith('data: ')) {
             const data = line.slice(6);
             if (data === '[DONE]') break;
