@@ -54,7 +54,16 @@ export default function ChatInterface() {
         return;
       }
 
-      if (!response.ok) throw new Error('Failed to get response');
+      if (!response.ok) {
+        let errorMessage = 'Failed to get response';
+        try {
+          const errorData = await response.json();
+          if (errorData.error) errorMessage = errorData.error;
+        } catch (e) {
+          // ignore
+        }
+        throw new Error(errorMessage);
+      }
 
       const reader = response.body?.getReader();
       if (!reader) throw new Error('No reader available');
@@ -120,14 +129,14 @@ export default function ChatInterface() {
           )
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
       setMessages(prev => [
         ...prev,
         { 
           id: (Date.now() + 1).toString(), 
           role: 'assistant', 
-          content: 'Sorry, I encountered an error while trying to fetch yield data. Please try again.' 
+          content: `⚠️ **Error**: ${error.message || 'Sorry, I encountered an error while trying to fetch yield data. Please try again.'}` 
         }
       ]);
     }
