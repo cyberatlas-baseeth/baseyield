@@ -10,7 +10,7 @@ export default function ExamplePrompts({ onSelect }: ExamplePromptsProps) {
   const prompts = [
     { text: 'Best USDC yield on Base', icon: '🏆' },
     { text: 'Top 5 yield opportunities', icon: '📊' },
-    { text: 'Safe high APY options', icon: '🛡️' },
+    { text: 'Detaylı Risk Analizi (0.02 USDC)', icon: '🔍' },
     { text: 'Compare ETH yields', icon: '🔄' }
   ];
 

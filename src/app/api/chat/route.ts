@@ -21,6 +21,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // --- NEW: x402 Payment Check ---
+    const lastUserMessage = body.messages.filter(m => m.role === 'user').pop();
+    const isPremiumRequest = lastUserMessage?.content.toLowerCase().includes('detaylı risk analizi');
+    
+    let isPremium = false;
+    
+    if (isPremiumRequest) {
+      const paymentReceipt = request.headers.get('x-402-payment-receipt');
+      if (!paymentReceipt) {
+        return Response.json(
+          {
+            error: "Payment Required",
+            paymentRequest: {
+              amount: "0.02",
+              currency: "USDC",
+              network: "base",
+              destination: "0x000000000000000000000000000000000000dEaD",
+            }
+          },
+          { status: 402 }
+        );
+      }
+      isPremium = true;
+    }
+    // -------------------------------
+
     // 1. Fetch live Base yield data
     let yieldContext: string;
     try {
@@ -32,7 +58,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Build the message array with system prompt + yield context
-    const systemPrompt = buildSystemPrompt(yieldContext);
+    const systemPrompt = buildSystemPrompt(yieldContext, isPremium);
     const messages: GroqMessage[] = [
       { role: "system", content: systemPrompt },
       ...body.messages.map((m) => ({

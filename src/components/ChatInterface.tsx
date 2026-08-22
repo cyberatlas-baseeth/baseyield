@@ -5,6 +5,7 @@ import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import ExamplePrompts from './ExamplePrompts';
 import LoadingIndicator from './LoadingIndicator';
+import PaymentMessage from './PaymentMessage';
 
 interface Message {
   id: string;
@@ -15,6 +16,7 @@ interface Message {
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentRequest, setPaymentRequest] = useState<{amount: string, currency: string, destination: string} | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -23,9 +25,9 @@ export default function ChatInterface() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isLoading]);
+  }, [messages, isLoading, paymentRequest]);
 
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = async (content: string, receipt?: string) => {
     if (!content.trim() || isLoading) return;
 
     const newUserMessage: Message = { id: Date.now().toString(), role: 'user', content };
@@ -38,9 +40,19 @@ export default function ChatInterface() {
       
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(receipt ? { 'x-402-payment-receipt': receipt } : {})
+        },
         body: JSON.stringify({ messages: messagesForAPI }),
       });
+
+      if (response.status === 402) {
+        const errorData = await response.json();
+        setPaymentRequest(errorData.paymentRequest);
+        setIsLoading(false);
+        return;
+      }
 
       if (!response.ok) throw new Error('Failed to get response');
 
@@ -121,19 +133,38 @@ export default function ChatInterface() {
     }
   };
 
+  const handlePaymentSuccess = (txHash: string) => {
+    setPaymentRequest(null);
+    const lastUserMessage = messages.filter(m => m.role === 'user').pop();
+    if (lastUserMessage) {
+      // Remove the last message from state so handleSendMessage can re-add it without duplication
+      setMessages(prev => prev.filter(m => m.id !== lastUserMessage.id));
+      handleSendMessage(lastUserMessage.content, txHash);
+    }
+  };
+
   return (
     <div className="flex flex-col h-full">
       <main className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 scrollbar-thin scrollbar-thumb-[#e2e5f1] scrollbar-track-transparent">
         <div className="max-w-3xl mx-auto flex flex-col gap-6">
           {messages.length === 0 ? (
             <div className="h-full min-h-[60vh] flex items-center">
-              <ExamplePrompts onSelect={handleSendMessage} />
+              <ExamplePrompts onSelect={(content) => handleSendMessage(content)} />
             </div>
           ) : (
             <>
               {messages.map((message) => (
                 <ChatMessage key={message.id} role={message.role} content={message.content} />
               ))}
+              {paymentRequest && (
+                <PaymentMessage 
+                  amount={paymentRequest.amount}
+                  currency={paymentRequest.currency}
+                  destination={paymentRequest.destination}
+                  onSuccess={handlePaymentSuccess}
+                  onCancel={() => setPaymentRequest(null)}
+                />
+              )}
               {isLoading && <LoadingIndicator />}
               <div ref={messagesEndRef} className="h-1" />
             </>
