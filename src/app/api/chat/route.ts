@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
     }
 
     return Response.json(
-      { error: "Something went wrong. Please try again." },
+      { error: `Backend Error: ${error instanceof Error ? error.message : String(error)}` },
       { status: 500 }
     );
   }
